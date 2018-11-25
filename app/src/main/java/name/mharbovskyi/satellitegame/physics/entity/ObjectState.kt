@@ -6,11 +6,22 @@ open class ObjectState(
     val location: Location
 )
 
-sealed class Projection(
-    val x: Double,
+interface Projection {
+    val x: Double
     val y: Double
-)
+}
 
-class Speed(x: Double, y: Double): Projection(x, y)
-class Acceleration(x: Double, y: Double): Projection(x, y)
-class Location(x: Double, y: Double): Projection(x, y)
+data class Speed(
+    override val x: Double,
+    override val y: Double
+): Projection
+
+data class Acceleration(
+    override val x: Double,
+    override val y: Double
+): Projection
+
+data class Location(
+    override val x: Double,
+    override val y: Double
+): Projection

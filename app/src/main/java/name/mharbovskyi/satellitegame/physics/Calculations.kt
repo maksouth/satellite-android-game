@@ -20,7 +20,7 @@ fun nextObjectState(
     ObjectState(
         speed = nextSpeed(satellite, timeInterval),
         location = nextLocation(satellite, timeInterval),
-        acceleration = nextAcceleration(satellite, planet, timeInterval)
+        acceleration = nextAcceleration(satellite, planet)
     )
 
 fun nextSpeed(satellite: ObjectState, timeInterval: Double): Speed =
@@ -34,14 +34,13 @@ fun nextSpeedProjection(speed: Double, acceleration: Double, timeInterval: Doubl
 
 fun nextAcceleration(
     satellite: ObjectState,
-    planet: Planet,
-    timeInterval: Double
+    planet: Planet
 ): Acceleration {
 
-    val distance = satellite.distanceTo(planet)
+    val distance = satellite.location.distanceTo(planet.location)
     return Acceleration(
-        calculateAccelerationProjection(planet.mass, planet.location.x, satellite.location.x, distance, timeInterval),
-        calculateAccelerationProjection(planet.mass, planet.location.y, satellite.location.y, distance, timeInterval)
+        calculateAccelerationProjection(planet.mass, planet.location.x, satellite.location.x, distance),
+        calculateAccelerationProjection(planet.mass, planet.location.y, satellite.location.y, distance)
     )
 }
 
@@ -50,12 +49,11 @@ fun calculateAccelerationProjection(
     gravitationalCenterProjection: Double,
     satelliteProjection: Double,
     distance: Double,
-    timeInterval: Double,
     gravitationalConstant: Double = G,
     distancePower: Double = 3.0
 ): Double {
     val projectionDistance = gravitationalCenterProjection - satelliteProjection
-    return gravitationalConstant * gravitationalCenterMass * satelliteProjection * timeInterval / distance.pow(distancePower)
+    return gravitationalConstant * gravitationalCenterMass * projectionDistance / distance.pow(distancePower)
 }
 
 fun nextLocation(
@@ -70,5 +68,5 @@ fun nextLocation(
 fun nextLocationProjection(coordinate: Double, speed: Double, timeInterval: Double) =
         coordinate + speed * timeInterval
 
-fun ObjectState.distanceTo(other: ObjectState) =
-        sqrt( (location.x - other.location.x).pow(2) + (location.y - other.location.y).pow(2) )
+fun Location.distanceTo(other: Location) =
+        sqrt( (x - other.x).pow(2) + (y - other.y).pow(2) )
