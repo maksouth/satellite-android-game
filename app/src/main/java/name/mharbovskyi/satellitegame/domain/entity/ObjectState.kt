@@ -1,5 +1,8 @@
 package name.mharbovskyi.satellitegame.domain.entity
 
+import kotlin.math.pow
+import kotlin.math.sqrt
+
 open class ObjectState(
     val speed: Speed,
     val acceleration: Acceleration,
@@ -28,3 +31,6 @@ data class Location(
     override val x: Double,
     override val y: Double
 ): Projection
+
+fun Location.distanceTo(other: Location) =
+    sqrt( (x - other.x).pow(2) + (y - other.y).pow(2) )

@@ -11,7 +11,7 @@ import org.junit.Test
 import kotlin.math.pow
 import kotlin.math.sqrt
 
-class PhysicsCalculationKtTest {
+class StateCalculationsKtTest {
 
     object Earth {
         val mass = 5.97e24
