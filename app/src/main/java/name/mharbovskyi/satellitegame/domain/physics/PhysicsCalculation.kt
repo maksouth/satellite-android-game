@@ -18,32 +18,34 @@ fun primaryOrbitSpeed(planet: Planet) =
 fun nextObjectState(
     satellite: ObjectState,
     planet: Planet,
-    timeInterval: Long
+    timeInterval: Double,
+    gravitationalConstant: Double = G
 ): ObjectState =
     ObjectState(
         speed = nextSpeed(satellite, timeInterval),
         location = nextLocation(satellite, timeInterval),
-        acceleration = nextAcceleration(satellite, planet)
+        acceleration = nextAcceleration(satellite, planet, gravitationalConstant)
     )
 
-fun nextSpeed(satellite: ObjectState, timeInterval: Long): Speed =
+fun nextSpeed(satellite: ObjectState, timeInterval: Double): Speed =
     Speed(
         x = nextSpeedProjection(satellite.speed.x, satellite.acceleration.x, timeInterval),
         y = nextSpeedProjection(satellite.speed.y, satellite.acceleration.y, timeInterval)
     )
 
-fun nextSpeedProjection(speed: Double, acceleration: Double, timeInterval: Long) =
+fun nextSpeedProjection(speed: Double, acceleration: Double, timeInterval: Double) =
     speed + acceleration * timeInterval
 
 fun nextAcceleration(
     satellite: ObjectState,
-    planet: Planet
+    planet: Planet,
+    gravitationalConstant: Double
 ): Acceleration {
 
     val distance = satellite.location.distanceTo(planet.location)
     return Acceleration(
-        calculateAccelerationProjection(planet.mass, planet.location.x, satellite.location.x, distance),
-        calculateAccelerationProjection(planet.mass, planet.location.y, satellite.location.y, distance)
+        calculateAccelerationProjection(planet.mass, planet.location.x, satellite.location.x, distance, gravitationalConstant),
+        calculateAccelerationProjection(planet.mass, planet.location.y, satellite.location.y, distance, gravitationalConstant)
     )
 }
 
@@ -52,23 +54,23 @@ fun calculateAccelerationProjection(
     gravitationalCenterProjection: Double,
     satelliteProjection: Double,
     distance: Double,
-    gravitationalConstant: Double = G,
+    gravitationalConstant: Double,
     distancePower: Double = 3.0
 ): Double {
     val projectionDistance = gravitationalCenterProjection - satelliteProjection
-    return  -gravitationalConstant * gravitationalCenterMass * projectionDistance / distance.pow(distancePower)
+    return  gravitationalConstant * gravitationalCenterMass * projectionDistance / distance.pow(distancePower)
 }
 
 fun nextLocation(
     satellite: ObjectState,
-    timeInterval: Long
+    timeInterval: Double
 ): Location =
     Location(
         x = nextLocationProjection(satellite.location.x, satellite.speed.x, timeInterval),
         y = nextLocationProjection(satellite.location.y, satellite.speed.y, timeInterval)
     )
 
-fun nextLocationProjection(coordinate: Double, speed: Double, timeInterval: Long) =
+fun nextLocationProjection(coordinate: Double, speed: Double, timeInterval: Double) =
         coordinate + speed * timeInterval
 
 fun Location.distanceTo(other: Location) =

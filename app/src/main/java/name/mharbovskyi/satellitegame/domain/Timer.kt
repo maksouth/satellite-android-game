@@ -22,6 +22,6 @@ fun CoroutineScope.accumulativeTimer(intervalChannel: ReceiveChannel<Long>) = pr
 
 fun CoroutineScope.scaledTimer(scale: Double, timerChannel: ReceiveChannel<Long>) = produce {
     for (time in timerChannel) {
-        send((time * scale).roundToLong())
+        send(time * scale)
     }
 }

@@ -10,6 +10,7 @@ import name.mharbovskyi.satellitegame.domain.entity.Location
 import name.mharbovskyi.satellitegame.domain.entity.ObjectState
 import name.mharbovskyi.satellitegame.domain.entity.Planet
 import name.mharbovskyi.satellitegame.domain.intervalTimer
+import name.mharbovskyi.satellitegame.domain.objectStateTransformer
 import name.mharbovskyi.satellitegame.domain.scaledTimer
 import name.mharbovskyi.satellitegame.presentation.BaseViewModel
 import name.mharbovskyi.satellitegame.presentation.ViewState
@@ -17,7 +18,7 @@ import name.mharbovskyi.satellitegame.presentation.ViewState
 class PlayViewModel(
     private var satellite: ObjectState,
     private val planet: Planet,
-    private val objectStateTransformer: (ObjectState, Long) -> ObjectState,
+    private val objectStateTransformer: (ObjectState, Double) -> ObjectState,
     private val locationScaler: (Location) -> Location
 ): BaseViewModel() {
 
@@ -45,7 +46,7 @@ class PlayViewModelFactory(
     private val satellite: ObjectState,
     private val planet: Planet,
 //    private val timer: ReceiveChannel<Long>,
-    private val objectStateTransformer: (ObjectState, Long) -> ObjectState,
+    private val objectStateTransformer: (ObjectState, Double) -> ObjectState,
     private val locationScaler: (Location) -> Location
 ): ViewModelProvider.Factory{
 
