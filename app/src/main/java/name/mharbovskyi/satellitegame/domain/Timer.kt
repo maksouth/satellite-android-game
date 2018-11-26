@@ -1,15 +1,14 @@
-package name.mharbovskyi.satellitegame.physics
+package name.mharbovskyi.satellitegame.domain
 
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.*
+import kotlin.math.roundToLong
 
 // produce stream of intervals milliseconds at fixed rate
 fun CoroutineScope.intervalTimer(interval: Long = 100L) = produce {
-    var passedTime = 0L
     while (true) {
-        passedTime += interval
         delay(interval)
-        send(passedTime)
+        send(interval)
     }
 }
 
@@ -18,5 +17,11 @@ fun CoroutineScope.accumulativeTimer(intervalChannel: ReceiveChannel<Long>) = pr
     for (interval in intervalChannel) {
         passedTime += interval
         send(passedTime)
+    }
+}
+
+fun CoroutineScope.scaledTimer(scale: Double, timerChannel: ReceiveChannel<Long>) = produce {
+    for (time in timerChannel) {
+        send((time * scale).roundToLong())
     }
 }

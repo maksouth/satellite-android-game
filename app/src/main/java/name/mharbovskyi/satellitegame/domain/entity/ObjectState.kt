@@ -1,10 +1,13 @@
-package name.mharbovskyi.satellitegame.physics.entity
+package name.mharbovskyi.satellitegame.domain.entity
 
 open class ObjectState(
     val speed: Speed,
     val acceleration: Acceleration,
     val location: Location
-)
+) {
+    override fun toString(): String =
+        "ObjectState(speed=$speed, acceleration=$acceleration, location=$location)"
+}
 
 interface Projection {
     val x: Double

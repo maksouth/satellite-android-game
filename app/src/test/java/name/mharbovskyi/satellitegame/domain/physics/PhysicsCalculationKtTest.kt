@@ -1,14 +1,14 @@
-package name.mharbovskyi.satellitegame.physics
+package name.mharbovskyi.satellitegame.domain.physics
 
 import org.junit.Assert.assertEquals
-import name.mharbovskyi.satellitegame.physics.entity.Acceleration
-import name.mharbovskyi.satellitegame.physics.entity.Location
-import name.mharbovskyi.satellitegame.physics.entity.ObjectState
-import name.mharbovskyi.satellitegame.physics.entity.Speed
+import name.mharbovskyi.satellitegame.domain.entity.Acceleration
+import name.mharbovskyi.satellitegame.domain.entity.Location
+import name.mharbovskyi.satellitegame.domain.entity.ObjectState
+import name.mharbovskyi.satellitegame.domain.entity.Speed
 import org.junit.Test
 import kotlin.math.sqrt
 
-class CalculationsKtTest {
+class PhysicsCalculationKtTest {
 
     object Earth {
         val mass = 5.97e24
@@ -19,7 +19,7 @@ class CalculationsKtTest {
         sqrt(G * Earth.mass / Earth.radius)
 
     @Test fun `test primary orbit speed`() =
-        println("$`primary orbit speed` ${Earth.mass}")
+        println("$`primary orbit speed` ${Earth.mass* G}")
 
 
     @Test fun `test distance between objects`() {
@@ -30,13 +30,13 @@ class CalculationsKtTest {
     }
 
     @Test fun `test location projection change`() {
-        val newCoordinate = nextLocationProjection(0.0, 2.0, 5.0)
+        val newCoordinate = nextLocationProjection(0.0, 2.0, 5)
 
         assertEquals(10.0, newCoordinate, 0.0)
     }
 
     @Test fun `test location projection change negative speed`() {
-        val newCoordinate = nextLocationProjection(0.0, -2.0, 5.0)
+        val newCoordinate = nextLocationProjection(0.0, -2.0, 5)
 
         assertEquals(-10.0, newCoordinate, 0.0)
     }
@@ -48,7 +48,7 @@ class CalculationsKtTest {
             Location(0.0, 0.0)
         )
 
-        val newLocation = nextLocation(satellite, 1.0)
+        val newLocation = nextLocation(satellite, 1)
 
         assertEquals(Location(3.0, -4.0), newLocation)
     }
