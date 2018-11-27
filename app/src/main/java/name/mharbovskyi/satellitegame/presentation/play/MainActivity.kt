@@ -6,12 +6,14 @@ import android.util.DisplayMetrics
 import android.util.Log
 import kotlinx.android.synthetic.main.activity_main.*
 import name.mharbovskyi.satellitegame.R
+import name.mharbovskyi.satellitegame.domain.ScreenSize
 import name.mharbovskyi.satellitegame.domain.coordinateTransformer
 import name.mharbovskyi.satellitegame.domain.entity.*
+import name.mharbovskyi.satellitegame.domain.physics.calculation.primaryOrbitSpeed
+import name.mharbovskyi.satellitegame.domain.physics.measurement.FirstMeasurementSystem
+import name.mharbovskyi.satellitegame.domain.scaledValuesFor
 import name.mharbovskyi.satellitegame.domain.trajectorySequenceBuilder
 import name.mharbovskyi.satellitegame.presentation.observeBy
-import kotlin.math.pow
-import kotlin.math.sqrt
 
 class MainActivity : AppCompatActivity() {
 
@@ -29,29 +31,34 @@ class MainActivity : AppCompatActivity() {
         val height = displayMetrics.heightPixels
         val width = displayMetrics.widthPixels
 
-        planet.x = width.toFloat()/2
-        planet.y = height.toFloat() / 2
+        planet.x = width.toFloat() / 2 + planet.width / 2
+        planet.y = height.toFloat() / 2 + planet.height / 2
+
+        val screenSize = ScreenSize(height, width)
+        val measurementSystem = FirstMeasurementSystem
+
+        Log.d(tag, "H: $height, W: $width, PH: ${planet.y}, PW: ${planet.x}")
 
         val planet = Planet(
             "Ventura",
-            100.0,
-            10.0,
+            measurementSystem.planet.weight.heavy,
+            measurementSystem.planet.radius.medium,
             Location(0.0, 0.0)
         )
 
-        val g = 2 * Math.PI.pow(2) / 5
-        val initialSpeed = sqrt( g * planet.mass / planet.radius )
-        var satellite = ObjectState(
-            Speed(  initialSpeed, 0.0),
+        val initialSpeed = primaryOrbitSpeed(planet, measurementSystem.g)
+        val satellite = ObjectState(
+            Speed( - 1.5 * initialSpeed, 0.0),
             Acceleration(0.0, 0.0),
             Location(0.0, planet.radius)
         )
 
         viewModel = PlayViewModel(
-            satellite,
-            planet,
-            trajectorySequenceBuilder(planet, g),
-            coordinateTransformer(width, height)
+            satellite = satellite,
+            scaledValues = scaledValuesFor(measurementSystem, screenSize),
+            planet = planet,
+            trajectoryBuilder = trajectorySequenceBuilder(planet, measurementSystem.g),
+            locationScalerFactory = { coordinateTransformer(it.coordinateScale, width, height) }
         )
 
         viewModel.satellitePosition.observeBy(this,
@@ -80,8 +87,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun updateSatelliteLocation(location: Location) {
-        Log.d(tag, "New location $location")
-        doge.x = location.x.toFloat()
-        doge.y = location.y.toFloat()
+        //Log.d(tag, "New location $location")
+        doge.x = location.x.toFloat() + doge.width / 2
+        doge.y = location.y.toFloat() + doge.height / 2
     }
 }

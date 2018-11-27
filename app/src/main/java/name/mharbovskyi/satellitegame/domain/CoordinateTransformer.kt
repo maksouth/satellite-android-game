@@ -1,10 +1,9 @@
 package name.mharbovskyi.satellitegame.domain
 
+import android.util.Log
 import name.mharbovskyi.satellitegame.domain.entity.Location
 
-fun coordinateTransformer(width: Int, height: Int): (Location) -> Location {
-
-    val scale = 20.0
+fun coordinateTransformer(scale: Double, width: Int, height: Int): (Location) -> Location {
 
     return { location ->
 
@@ -14,9 +13,12 @@ fun coordinateTransformer(width: Int, height: Int): (Location) -> Location {
         val movedX = scaleX + width/2
         val movedY = scaleY + height/2
 
-        Location(movedX, movedY)
+        val to = Location(movedX, movedY)
+        Log.d("CoordinateTransformer", "From: $location to $to")
+
+        to
     }
 }
 
 internal fun scaled(value: Double, scale: Double) =
-        value * scale
+        value / scale

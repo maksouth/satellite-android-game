@@ -5,14 +5,14 @@ import kotlin.math.pow
 
 interface MeasurementSystem {
     val planet: Planet
-    val period: Double // time of single full rotation of satellite
-    fun g() =
-        4 * Math.PI.pow(2) * planet.radius.medium / ( planet.weight.normal * period.pow(2))
+    val period: Double // time of single full rotation of satellite, sec
+    val g: Double
+        get() = 4 * Math.PI.pow(2) * planet.radius.medium / ( planet.weight.normal * period.pow(2))
 }
 
 data class Planet (
-    val radius: Radius,
-    val weight: Weight
+    val radius: Radius, // in m
+    val weight: Weight // in kg
 )
 
 data class Radius (
