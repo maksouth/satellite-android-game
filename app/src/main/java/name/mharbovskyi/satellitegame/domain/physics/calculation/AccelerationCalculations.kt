@@ -1,4 +1,4 @@
-package name.mharbovskyi.satellitegame.domain.physics
+package name.mharbovskyi.satellitegame.domain.physics.calculation
 
 import name.mharbovskyi.satellitegame.domain.entity.Acceleration
 import name.mharbovskyi.satellitegame.domain.entity.ObjectState
@@ -14,8 +14,20 @@ fun nextAcceleration(
 
     val distance = satellite.location.distanceTo(planet.location)
     return Acceleration(
-        calculateAccelerationProjection(planet.mass, planet.location.x, satellite.location.x, distance, gravitationalConstant),
-        calculateAccelerationProjection(planet.mass, planet.location.y, satellite.location.y, distance, gravitationalConstant)
+        calculateAccelerationProjection(
+            planet.mass,
+            planet.location.x,
+            satellite.location.x,
+            distance,
+            gravitationalConstant
+        ),
+        calculateAccelerationProjection(
+            planet.mass,
+            planet.location.y,
+            satellite.location.y,
+            distance,
+            gravitationalConstant
+        )
     )
 }
 

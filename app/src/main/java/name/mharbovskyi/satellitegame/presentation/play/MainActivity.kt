@@ -1,6 +1,5 @@
 package name.mharbovskyi.satellitegame.presentation.play
 
-import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.util.DisplayMetrics
@@ -9,8 +8,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 import name.mharbovskyi.satellitegame.R
 import name.mharbovskyi.satellitegame.domain.coordinateTransformer
 import name.mharbovskyi.satellitegame.domain.entity.*
-import name.mharbovskyi.satellitegame.domain.objectStateTransformer
-import name.mharbovskyi.satellitegame.domain.physics.primaryOrbitSpeed
+import name.mharbovskyi.satellitegame.domain.trajectorySequenceBuilder
 import name.mharbovskyi.satellitegame.presentation.observeBy
 import kotlin.math.pow
 import kotlin.math.sqrt
@@ -31,19 +29,6 @@ class MainActivity : AppCompatActivity() {
         val height = displayMetrics.heightPixels
         val width = displayMetrics.widthPixels
 
-//        val planet = Planet(
-//            "Earth",
-//            mass = 5.97e24,
-//            radius = 6371000.0,
-//            location = Location(0.0, 0.0)
-//        )
-//
-//        val satellite = ObjectState(
-//            Speed(primaryOrbitSpeed(planet)/2, 0.0),
-//            Acceleration(0.0, 0.0),
-//            Location(0.0, planet.radius)
-//        )
-
         planet.x = width.toFloat()/2
         planet.y = height.toFloat() / 2
 
@@ -62,13 +47,12 @@ class MainActivity : AppCompatActivity() {
             Location(0.0, planet.radius)
         )
 
-        val factory = PlayViewModelFactory(
+        viewModel = PlayViewModel(
             satellite,
             planet,
-            objectStateTransformer(planet),
+            trajectorySequenceBuilder(planet, g),
             coordinateTransformer(width, height)
         )
-        viewModel = ViewModelProviders.of(this, factory)[PlayViewModel::class.java]
 
         viewModel.satellitePosition.observeBy(this,
             success = ::updateSatelliteLocation,

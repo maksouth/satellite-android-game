@@ -1,12 +1,13 @@
 package name.mharbovskyi.satellitegame.domain.physics
 
-import kotlinx.coroutines.channels.take
-import kotlinx.coroutines.channels.withIndex
 import kotlinx.coroutines.runBlocking
 import name.mharbovskyi.satellitegame.domain.buildTrajectorySequence
 import name.mharbovskyi.satellitegame.domain.entity.*
 import org.junit.Assert.assertEquals
 import name.mharbovskyi.satellitegame.domain.intervalTimer
+import name.mharbovskyi.satellitegame.domain.physics.calculation.G
+import name.mharbovskyi.satellitegame.domain.physics.calculation.nextLocation
+import name.mharbovskyi.satellitegame.domain.physics.calculation.nextLocationProjection
 import name.mharbovskyi.satellitegame.domain.scaledTimer
 import org.junit.Test
 import kotlin.math.pow
@@ -34,13 +35,15 @@ class StateCalculationsKtTest {
     }
 
     @Test fun `test location projection change`() {
-        val newCoordinate = nextLocationProjection(0.0, 2.0, 5.0)
+        val newCoordinate =
+            nextLocationProjection(0.0, 2.0, 5.0)
 
         assertEquals(10.0, newCoordinate, 0.0)
     }
 
     @Test fun `test location projection change negative speed`() {
-        val newCoordinate = nextLocationProjection(0.0, -2.0, 5.0)
+        val newCoordinate =
+            nextLocationProjection(0.0, -2.0, 5.0)
 
         assertEquals(-10.0, newCoordinate, 0.0)
     }

@@ -6,14 +6,13 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlin.coroutines.CoroutineContext
 
-open class BaseViewModel: ViewModel(), CoroutineScope {
+open class BaseViewModel: CoroutineScope {
 
     private val job = Job()
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.IO + job
 
-    public override fun onCleared() {
-        super.onCleared()
+    open fun destroy() {
         job.cancel()
     }
 }

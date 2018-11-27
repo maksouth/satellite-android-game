@@ -1,4 +1,4 @@
-package name.mharbovskyi.satellitegame.domain.physics
+package name.mharbovskyi.satellitegame.domain.physics.calculation
 
 import name.mharbovskyi.satellitegame.domain.entity.Location
 import name.mharbovskyi.satellitegame.domain.entity.ObjectState
@@ -9,8 +9,16 @@ fun nextLocation(
     timeInterval: Double
 ): Location =
     Location(
-        x = nextLocationProjection(satellite.location.x, satellite.speed.x, timeInterval),
-        y = nextLocationProjection(satellite.location.y, satellite.speed.y, timeInterval)
+        x = nextLocationProjection(
+            satellite.location.x,
+            satellite.speed.x,
+            timeInterval
+        ),
+        y = nextLocationProjection(
+            satellite.location.y,
+            satellite.speed.y,
+            timeInterval
+        )
     )
 
 fun nextLocationSmooth(
@@ -22,8 +30,16 @@ fun nextLocationSmooth(
     val speedY = (satellite.speed.y + speed.y) / 2
 
     return Location(
-        x = nextLocationProjection(satellite.location.x, speedX, timeInterval),
-        y = nextLocationProjection(satellite.location.y, speedY, timeInterval)
+        x = nextLocationProjection(
+            satellite.location.x,
+            speedX,
+            timeInterval
+        ),
+        y = nextLocationProjection(
+            satellite.location.y,
+            speedY,
+            timeInterval
+        )
     )
 }
 

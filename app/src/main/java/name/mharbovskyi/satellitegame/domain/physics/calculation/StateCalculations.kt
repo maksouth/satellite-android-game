@@ -1,8 +1,6 @@
-package name.mharbovskyi.satellitegame.domain.physics
+package name.mharbovskyi.satellitegame.domain.physics.calculation
 
 import name.mharbovskyi.satellitegame.domain.entity.*
-import kotlin.math.pow
-import kotlin.math.sqrt
 
 
 /**
@@ -19,9 +17,15 @@ fun nextObjectState(
     gravitationalConstant: Double = G
 ): ObjectState {
 
-    val acceleration = nextAcceleration(satellite, planet, gravitationalConstant)
-    val speed = nextSpeedSmooth(satellite, acceleration, timeInterval)
-    val location = nextLocationSmooth(satellite, speed, timeInterval)
+    val acceleration = nextAcceleration(
+        satellite,
+        planet,
+        gravitationalConstant
+    )
+    val speed =
+        nextSpeedSmooth(satellite, acceleration, timeInterval)
+    val location =
+        nextLocationSmooth(satellite, speed, timeInterval)
 
     return ObjectState(speed, acceleration, location)
 }
