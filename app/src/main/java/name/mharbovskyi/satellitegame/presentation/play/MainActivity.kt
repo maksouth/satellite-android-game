@@ -12,6 +12,8 @@ import name.mharbovskyi.satellitegame.domain.entity.*
 import name.mharbovskyi.satellitegame.domain.objectStateTransformer
 import name.mharbovskyi.satellitegame.domain.physics.primaryOrbitSpeed
 import name.mharbovskyi.satellitegame.presentation.observeBy
+import kotlin.math.pow
+import kotlin.math.sqrt
 
 class MainActivity : AppCompatActivity() {
 
@@ -29,15 +31,33 @@ class MainActivity : AppCompatActivity() {
         val height = displayMetrics.heightPixels
         val width = displayMetrics.widthPixels
 
+//        val planet = Planet(
+//            "Earth",
+//            mass = 5.97e24,
+//            radius = 6371000.0,
+//            location = Location(0.0, 0.0)
+//        )
+//
+//        val satellite = ObjectState(
+//            Speed(primaryOrbitSpeed(planet)/2, 0.0),
+//            Acceleration(0.0, 0.0),
+//            Location(0.0, planet.radius)
+//        )
+
+        planet.x = width.toFloat()/2
+        planet.y = height.toFloat() / 2
+
         val planet = Planet(
-            "Earth",
-            mass = 5.97e24,
-            radius = 6371000.0,
-            location = Location(0.0, 0.0)
+            "Ventura",
+            100.0,
+            10.0,
+            Location(0.0, 0.0)
         )
 
-        val satellite = ObjectState(
-            Speed(primaryOrbitSpeed(planet)/2, 0.0),
+        val g = 2 * Math.PI.pow(2) / 5
+        val initialSpeed = sqrt( g * planet.mass / planet.radius )
+        var satellite = ObjectState(
+            Speed(  initialSpeed, 0.0),
             Acceleration(0.0, 0.0),
             Location(0.0, planet.radius)
         )

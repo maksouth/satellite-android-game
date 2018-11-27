@@ -4,7 +4,7 @@ import name.mharbovskyi.satellitegame.domain.entity.Location
 
 fun coordinateTransformer(width: Int, height: Int): (Location) -> Location {
 
-    val scale = height.toDouble() / (12 * 100_000)
+    val scale = 20.0
 
     return { location ->
 
@@ -19,4 +19,4 @@ fun coordinateTransformer(width: Int, height: Int): (Location) -> Location {
 }
 
 internal fun scaled(value: Double, scale: Double) =
-        value * scale / ( 12 * 100000 )
+        value * scale

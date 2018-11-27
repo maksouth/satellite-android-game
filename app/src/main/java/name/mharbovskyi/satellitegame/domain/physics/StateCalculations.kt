@@ -17,9 +17,11 @@ fun nextObjectState(
     planet: Planet,
     timeInterval: Double,
     gravitationalConstant: Double = G
-): ObjectState =
-    ObjectState(
-        speed = nextSpeed(satellite, timeInterval),
-        location = nextLocation(satellite, timeInterval),
-        acceleration = nextAcceleration(satellite, planet, gravitationalConstant)
-    )
+): ObjectState {
+
+    val acceleration = nextAcceleration(satellite, planet, gravitationalConstant)
+    val speed = nextSpeedSmooth(satellite, acceleration, timeInterval)
+    val location = nextLocationSmooth(satellite, speed, timeInterval)
+
+    return ObjectState(speed, acceleration, location)
+}

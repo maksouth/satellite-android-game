@@ -3,6 +3,7 @@ package name.mharbovskyi.satellitegame.domain.physics
 import kotlinx.coroutines.channels.take
 import kotlinx.coroutines.channels.withIndex
 import kotlinx.coroutines.runBlocking
+import name.mharbovskyi.satellitegame.domain.buildTrajectorySequence
 import name.mharbovskyi.satellitegame.domain.entity.*
 import org.junit.Assert.assertEquals
 import name.mharbovskyi.satellitegame.domain.intervalTimer
@@ -69,16 +70,15 @@ class StateCalculationsKtTest {
 
         val initialSpeed = sqrt( g * planet.mass / planet.radius )
         var satellite = ObjectState(
-            Speed(0.8 * initialSpeed, 0.0),
+            Speed(initialSpeed, 0.0),
             Acceleration(0.0, 0.0),
             Location(0.0, planet.radius)
         )
 
-        for ((index, time) in timer.take(30000).withIndex()) {
-            println("Index $index $time")
-            println(satellite)
-            println("Distance to center ${satellite.location.distanceTo(planet.location)}")
-            satellite = nextObjectState(satellite, planet, time, gravitationalConstant = g)
+        for ((index, state) in buildTrajectorySequence(satellite, planet, 0.001, g).withIndex().take(40000)) {
+            println("Index $index")
+            println(state)
+            println("Distance to center ${state.location.distanceTo(planet.location)}")
         }
     }
 }

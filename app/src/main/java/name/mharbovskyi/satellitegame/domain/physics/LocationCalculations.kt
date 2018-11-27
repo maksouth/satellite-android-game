@@ -2,6 +2,7 @@ package name.mharbovskyi.satellitegame.domain.physics
 
 import name.mharbovskyi.satellitegame.domain.entity.Location
 import name.mharbovskyi.satellitegame.domain.entity.ObjectState
+import name.mharbovskyi.satellitegame.domain.entity.Speed
 
 fun nextLocation(
     satellite: ObjectState,
@@ -12,6 +13,19 @@ fun nextLocation(
         y = nextLocationProjection(satellite.location.y, satellite.speed.y, timeInterval)
     )
 
-//todo add speed averaging 0.5 *( vx1+vx2)
-fun nextLocationProjection(coordinate: Double, speed: Double, timeInterval: Double) =
+fun nextLocationSmooth(
+    satellite: ObjectState,
+    speed: Speed,
+    timeInterval: Double
+): Location {
+    val speedX = (satellite.speed.x + speed.x) / 2
+    val speedY = (satellite.speed.y + speed.y) / 2
+
+    return Location(
+        x = nextLocationProjection(satellite.location.x, speedX, timeInterval),
+        y = nextLocationProjection(satellite.location.y, speedY, timeInterval)
+    )
+}
+
+internal fun nextLocationProjection(coordinate: Double, speed: Double, timeInterval: Double) =
     coordinate + speed * timeInterval
