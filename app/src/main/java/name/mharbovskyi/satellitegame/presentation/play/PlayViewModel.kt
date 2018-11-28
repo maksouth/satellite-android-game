@@ -16,7 +16,7 @@ class PlayViewModel(
     private var satellite: ObjectState, //optional, should be passed to start
     private val scaledValues: ScaledValues,
     private val planet: Planet,
-    private val trajectoryBuilder: (ObjectState, Double) -> Sequence<ObjectState>,
+    private val trajectoryBuilder: (ObjectState) -> Sequence<ObjectState>,
     private val hasCollision: (Planet, ObjectState) -> Boolean,
     locationScalerFactory: (ScaledValues) -> (Location) -> Location
 ): BaseViewModel() {
@@ -29,7 +29,7 @@ class PlayViewModel(
     fun start() {
         satelliteLocationJob = launch {
 
-            val stateSequence = trajectoryBuilder(satellite, scaledValues.calculationStep)
+            val stateSequence = trajectoryBuilder(satellite)
                 .filterIndexed{ count, _ -> count % scaledValues.frameDropRate == 0 }
                 .iterator()
 

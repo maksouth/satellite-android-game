@@ -7,7 +7,8 @@ data class ScaledValues(
     val calculationStep: Double,
     val coordinateScale: Double,
     val frameDropRate: Int,
-    val fps: Int = 60
+    val fps: Int,
+    val trajectoryFrames: Int
 )
 
 data class ScreenSize(
@@ -26,5 +27,5 @@ fun scaledValuesFor(
     val scale = 12 * measurementSystem.planet.radius.medium / screenSize.height
     val dropRate = trajectoryFrames / framesRate * scaledPeriod
 
-    return ScaledValues(step, scale, dropRate.roundToInt())
+    return ScaledValues(step, scale, dropRate.roundToInt(), framesRate, trajectoryFrames)
 }
