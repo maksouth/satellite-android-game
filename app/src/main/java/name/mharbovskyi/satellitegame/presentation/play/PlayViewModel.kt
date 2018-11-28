@@ -1,9 +1,9 @@
 package name.mharbovskyi.satellitegame.presentation.play
 
 import android.arch.lifecycle.MutableLiveData
-import android.util.Log
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import name.mharbovskyi.satellitegame.R
 import name.mharbovskyi.satellitegame.domain.ScaledValues
 import name.mharbovskyi.satellitegame.domain.entity.Location
 import name.mharbovskyi.satellitegame.domain.entity.ObjectState
@@ -17,6 +17,7 @@ class PlayViewModel(
     private val scaledValues: ScaledValues,
     private val planet: Planet,
     private val trajectoryBuilder: (ObjectState, Double) -> Sequence<ObjectState>,
+    private val hasCollision: (Planet, ObjectState) -> Boolean,
     locationScalerFactory: (ScaledValues) -> (Location) -> Location
 ): BaseViewModel() {
 
@@ -33,10 +34,16 @@ class PlayViewModel(
                 .iterator()
 
             for (time in timer) {
-                val location = stateSequence.next().location
+                val state = stateSequence.next()
+                val location = state.location
                 val scaledLocation = locationScaler(location)
-                satellitePosition.postValue(ViewState.success(scaledLocation))
-                //Log.d("PlayViewModel", "new state: $location")
+
+                if (hasCollision(planet, state)) {
+                    satellitePosition.postValue(ViewState.failure(R.string.error_collision))
+                    break
+                } else {
+                    satellitePosition.postValue(ViewState.success(scaledLocation))
+                }
             }
         }
     }

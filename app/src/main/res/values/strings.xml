@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">SatelliteGame</string>
+    <string name="error_collision">Collision happened</string>
 </resources>

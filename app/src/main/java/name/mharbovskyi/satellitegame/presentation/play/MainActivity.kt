@@ -4,15 +4,13 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.util.DisplayMetrics
 import android.util.Log
+import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_main.*
 import name.mharbovskyi.satellitegame.R
-import name.mharbovskyi.satellitegame.domain.ScreenSize
-import name.mharbovskyi.satellitegame.domain.coordinateTransformer
+import name.mharbovskyi.satellitegame.domain.*
 import name.mharbovskyi.satellitegame.domain.entity.*
 import name.mharbovskyi.satellitegame.domain.physics.calculation.primaryOrbitSpeed
 import name.mharbovskyi.satellitegame.domain.physics.measurement.FirstMeasurementSystem
-import name.mharbovskyi.satellitegame.domain.scaledValuesFor
-import name.mharbovskyi.satellitegame.domain.trajectorySequenceBuilder
 import name.mharbovskyi.satellitegame.presentation.observeBy
 
 class MainActivity : AppCompatActivity() {
@@ -48,16 +46,17 @@ class MainActivity : AppCompatActivity() {
 
         val initialSpeed = primaryOrbitSpeed(planet, measurementSystem.g)
         val satellite = ObjectState(
-            Speed( - 1.5 * initialSpeed, 0.0),
+            Speed( 0.3 * initialSpeed, 0.0),
             Acceleration(0.0, 0.0),
-            Location(0.0, planet.radius)
+            Location(0.0, 4 * planet.radius)
         )
 
         viewModel = PlayViewModel(
             satellite = satellite,
-            scaledValues = scaledValuesFor(measurementSystem, screenSize),
+            scaledValues = scaledValuesFor(measurementSystem, screenSize, scaledPeriod = 8.0),
             planet = planet,
             trajectoryBuilder = trajectorySequenceBuilder(planet, measurementSystem.g),
+            hasCollision = ::hasCollision,
             locationScalerFactory = { coordinateTransformer(it.coordinateScale, width, height) }
         )
 
@@ -83,6 +82,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun showFailure(resId: Int) {
+        Toast.makeText(this, resId, Toast.LENGTH_SHORT).show()
         Log.d(tag, "Failure ${getString(resId)}")
     }
 
