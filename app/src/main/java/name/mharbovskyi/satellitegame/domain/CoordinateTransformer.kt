@@ -1,11 +1,8 @@
 package name.mharbovskyi.satellitegame.domain
 
 import name.mharbovskyi.satellitegame.domain.entity.Location
-import name.mharbovskyi.satellitegame.domain.entity.Planet
-import name.mharbovskyi.satellitegame.domain.entity.copy
 
 interface CoordinateTransformer {
-    fun transformPlanet(planet: Planet): Planet
     fun transformLocation(location: Location): Location
     fun transformValue(value: Double): Double
 }
@@ -15,12 +12,6 @@ class ScreenCoordinateTransformer(
     private val width: Int,
     private val height: Int
 ): CoordinateTransformer {
-
-    override fun transformPlanet(planet: Planet): Planet =
-        planet.copy(
-            radius = scaled(planet.radius, scale),
-            location = transformLocation(planet.location)
-        )
 
     override fun transformLocation(location: Location): Location {
         val scaleX = scaled(location.x, scale)
