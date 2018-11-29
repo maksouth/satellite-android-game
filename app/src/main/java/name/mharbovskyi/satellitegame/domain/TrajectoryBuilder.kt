@@ -6,16 +6,12 @@ import name.mharbovskyi.satellitegame.domain.physics.calculation.nextObjectState
 
 fun trajectorySequenceBuilder(
     planet: Planet,
-    gravitationalConstant: Double
-): (ObjectState, Double) -> Sequence<ObjectState> = { satellite, timeStep ->
+    gravitationalConstant: Double,
+    timeStep: Double
+): (ObjectState) -> Sequence<ObjectState> = { satellite ->
 
-    generateSequence(satellite) {
-        nextObjectState(
-            it,
-            planet,
-            timeStep,
-            gravitationalConstant
-        )
+    generateSequence(satellite) { previousState ->
+        nextObjectState(previousState, planet, timeStep, gravitationalConstant)
     }
 
 }
