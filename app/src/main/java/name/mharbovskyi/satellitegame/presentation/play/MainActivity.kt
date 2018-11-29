@@ -9,6 +9,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 import name.mharbovskyi.satellitegame.R
 import name.mharbovskyi.satellitegame.domain.*
 import name.mharbovskyi.satellitegame.domain.entity.*
+import name.mharbovskyi.satellitegame.domain.entity.Target
 import name.mharbovskyi.satellitegame.domain.physics.calculation.primaryOrbitSpeed
 import name.mharbovskyi.satellitegame.domain.physics.measurement.FirstMeasurementSystem
 import name.mharbovskyi.satellitegame.presentation.observeBy
@@ -44,17 +45,16 @@ class MainActivity : AppCompatActivity() {
             Location(0.0, 0.0)
         )
 
-        val initialSpeed = primaryOrbitSpeed(planet, measurementSystem.g)
-        val satellite = ObjectState(
-            Speed( 0.3 * initialSpeed, 0.0),
-            Acceleration(0.0, 0.0),
-            Location(0.0, 4 * planet.radius)
+        val target = Target(
+            Location(0.0, planet.radius),
+            planet.radius / 10
         )
 
         viewModel = PlayViewModel(
-            satellite = satellite,
             scaledValues = scaledValuesFor(measurementSystem, screenSize, scaledPeriod = 8.0),
             planet = planet,
+            target = target,
+            isFinish = ::isFinish,
             trajectoryBuilder = trajectorySequenceBuilder(planet, measurementSystem.g),
             hasCollision = ::hasCollision,
             locationScalerFactory = { coordinateTransformer(it.coordinateScale, width, height) }
@@ -69,7 +69,24 @@ class MainActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
-        viewModel.start()
+
+        val measurementSystem = FirstMeasurementSystem
+
+        val planet = Planet(
+            "Ventura",
+            measurementSystem.planet.weight.heavy,
+            measurementSystem.planet.radius.medium,
+            Location(0.0, 0.0)
+        )
+
+        val initialSpeed = primaryOrbitSpeed(planet, measurementSystem.g)
+        val satellite = ObjectState(
+            Speed( 0.0 * initialSpeed, 0.0),
+            Acceleration(0.0, 0.0),
+            Location(0.0, 5 * planet.radius)
+        )
+
+        viewModel.start(satellite)
     }
 
     override fun onStop() {
