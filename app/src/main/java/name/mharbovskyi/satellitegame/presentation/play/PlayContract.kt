@@ -11,10 +11,13 @@ interface PlayContract {
         fun drawTrajectoryHint(trajectory: List<Location>)
         fun drawNewSatelliteLocation(location: Location)
         fun showCollision(location: Location)
+        fun showFinish(location: Location)
     }
 
     interface Presenter : BasePresenter {
+        fun load()
         fun start(satellite: ObjectState)
+        fun stop()
         fun requestTrajectoryHint(satellite: ObjectState)
     }
 }

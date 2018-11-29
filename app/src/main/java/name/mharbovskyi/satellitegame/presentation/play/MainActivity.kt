@@ -11,13 +11,15 @@ import name.mharbovskyi.satellitegame.domain.*
 import name.mharbovskyi.satellitegame.domain.entity.*
 import name.mharbovskyi.satellitegame.domain.physics.calculation.primaryOrbitSpeed
 import name.mharbovskyi.satellitegame.domain.physics.measurement.FirstMeasurementSystem
+import name.mharbovskyi.satellitegame.domain.usecase.TrajectoryState
 import name.mharbovskyi.satellitegame.presentation.observeBy
+import kotlin.math.roundToInt
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), PlayContract.View {
 
     private val tag = MainActivity::class.java.simpleName.toString()
 
-    lateinit var viewModel: PlayViewModel
+    private lateinit var presenter: PlayContract.Presenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,52 +31,73 @@ class MainActivity : AppCompatActivity() {
         val height = displayMetrics.heightPixels
         val width = displayMetrics.widthPixels
 
-        planet.x = width.toFloat() / 2 + planet.width / 2
-        planet.y = height.toFloat() / 2 + planet.height / 2
-
-        val screenSize = ScreenSize(height, width)
-        val measurementSystem = FirstMeasurementSystem
-
         Log.d(tag, "H: $height, W: $width, PH: ${planet.y}, PW: ${planet.x}")
 
         val planet = Planet(
             "Ventura",
-            measurementSystem.planet.weight.heavy,
-            measurementSystem.planet.radius.medium,
+            FirstMeasurementSystem.planet.weight.heavy,
+            FirstMeasurementSystem.planet.radius.medium,
             Location(0.0, 0.0)
         )
-
-        val initialSpeed = primaryOrbitSpeed(planet, measurementSystem.g)
+        val initialSpeed = primaryOrbitSpeed(planet, FirstMeasurementSystem.g)
         val satellite = ObjectState(
             Speed( 0.3 * initialSpeed, 0.0),
             Acceleration(0.0, 0.0),
             Location(0.0, 4 * planet.radius)
         )
 
-        viewModel = PlayViewModel(
-            satellite = satellite,
-            scaledValues = scaledValuesFor(measurementSystem, screenSize, scaledPeriod = 8.0),
-            planet = planet,
-            trajectoryBuilder = trajectorySequenceBuilder(planet, measurementSystem.g),
-            hasCollision = ::hasCollision,
-            locationScalerFactory = { coordinateTransformer(it.coordinateScale, width, height) }
-        )
+        presenter = PlayPresenterFactory.create(this, width, height)
 
-        viewModel.satellitePosition.observeBy(this,
-            success = ::updateSatelliteLocation,
-            failure = ::showFailure,
-            loading = ::showLoading
-        )
+        presenter.load()
+
+        presenter.start(satellite)
+//        viewModel = PlayViewModel(
+//            satellite = satellite,
+//            scaledValues = scaledValuesFor(measurementSystem, screenSize, scaledPeriod = 8.0),
+//            planet = planet,
+//            trajectoryBuilder = trajectorySequenceBuilder(planet, measurementSystem.g),
+//            hasCollision = ::hasCollision,
+//            locationScalerFactory = { coordinateTransformer(it.coordinateScale, width, height) }
+//        )
+//
+//        viewModel.satellitePosition.observeBy(this,
+//            success = ::updateSatelliteLocation,
+//            failure = ::showFailure,
+//            loading = ::showLoading
+//        )
     }
 
-    override fun onStart() {
-        super.onStart()
-        viewModel.start()
+    override fun drawPlanet(domainPlanet: Planet) {
+        planet.x = domainPlanet.location.x.toFloat()  + planet.width / 2
+        planet.y = domainPlanet.location.y.toFloat()  + planet.height / 2
     }
+
+    override fun drawTrajectoryHint(trajectory: List<Location>) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun drawNewSatelliteLocation(location: Location) {
+        doge.x = location.x.toFloat() + doge.width / 2
+        doge.y = location.y.toFloat() + doge.height / 2
+    }
+
+    override fun showCollision(location: Location) {
+        Toast.makeText(this, "Collision", Toast.LENGTH_SHORT).show()
+    }
+
+    override fun showFinish(location: Location) {
+        Toast.makeText(this, "Finish", Toast.LENGTH_SHORT).show()
+    }
+
 
     override fun onStop() {
         super.onStop()
-        viewModel.stop()
+        presenter.stop()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        presenter.destroy()
     }
 
     private fun showLoading() {
