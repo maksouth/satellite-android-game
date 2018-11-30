@@ -38,7 +38,7 @@ fun nextSpeedSmooth(satellite: ObjectState, acceleration: Acceleration, timeInte
     )
 }
 
-internal fun nextSpeedProjection(speed: Double, acceleration: Double, timeInterval: Double) =
+private fun nextSpeedProjection(speed: Double, acceleration: Double, timeInterval: Double) =
     speed + acceleration * timeInterval
 
 fun primaryOrbitSpeed(planet: Planet, g: Double = G) =

@@ -3,22 +3,18 @@ package name.mharbovskyi.satellitegame.presentation.play
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.util.DisplayMetrics
-import android.util.Log
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_main.*
 import name.mharbovskyi.satellitegame.R
-import name.mharbovskyi.satellitegame.domain.*
-import name.mharbovskyi.satellitegame.domain.entity.*
+import name.mharbovskyi.satellitegame.domain.entity.Location
+import name.mharbovskyi.satellitegame.domain.entity.Planet
 import name.mharbovskyi.satellitegame.domain.entity.Target
-import name.mharbovskyi.satellitegame.domain.physics.calculation.primaryOrbitSpeed
-import name.mharbovskyi.satellitegame.domain.physics.measurement.FirstMeasurementSystem
-import name.mharbovskyi.satellitegame.presentation.observeBy
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), PlayContract.View {
 
     private val tag = MainActivity::class.java.simpleName.toString()
 
-    lateinit var viewModel: PlayViewModel
+    lateinit var presenter: PlayContract.Presenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,82 +26,53 @@ class MainActivity : AppCompatActivity() {
         val height = displayMetrics.heightPixels
         val width = displayMetrics.widthPixels
 
-        planet.x = width.toFloat() / 2 + planet.width / 2
-        planet.y = height.toFloat() / 2 + planet.height / 2
-
-        val screenSize = ScreenSize(height, width)
-        val measurementSystem = FirstMeasurementSystem
-
-        Log.d(tag, "H: $height, W: $width, PH: ${planet.y}, PW: ${planet.x}")
-
-        val planet = Planet(
-            "Ventura",
-            measurementSystem.planet.weight.heavy,
-            measurementSystem.planet.radius.medium,
-            Location(0.0, 0.0)
-        )
-
-        val target = Target(
-            Location(0.0, planet.radius),
-            planet.radius / 10
-        )
-
-        viewModel = PlayViewModel(
-            scaledValues = scaledValuesFor(measurementSystem, screenSize, scaledPeriod = 8.0),
-            planet = planet,
-            target = target,
-            isFinish = ::isFinish,
-            trajectoryBuilder = trajectorySequenceBuilder(planet, measurementSystem.g),
-            hasCollision = ::hasCollision,
-            locationScalerFactory = { coordinateTransformer(it.coordinateScale, width, height) }
-        )
-
-        viewModel.satellitePosition.observeBy(this,
-            success = ::updateSatelliteLocation,
-            failure = ::showFailure,
-            loading = ::showLoading
-        )
+        presenter = PlayPresenterFactory.build(this, width, height)
+        presenter.load()
     }
 
     override fun onStart() {
         super.onStart()
-
-        val measurementSystem = FirstMeasurementSystem
-
-        val planet = Planet(
-            "Ventura",
-            measurementSystem.planet.weight.heavy,
-            measurementSystem.planet.radius.medium,
-            Location(0.0, 0.0)
-        )
-
-        val initialSpeed = primaryOrbitSpeed(planet, measurementSystem.g)
-        val satellite = ObjectState(
-            Speed( 0.0 * initialSpeed, 0.0),
-            Acceleration(0.0, 0.0),
-            Location(0.0, 5 * planet.radius)
-        )
-
-        viewModel.start(satellite)
+        presenter.start(1.0, 1.0)
     }
 
     override fun onStop() {
         super.onStop()
-        viewModel.stop()
+        presenter.stop()
     }
 
-    private fun showLoading() {
-        Log.d(tag, "Start loading")
+    override fun onDestroy() {
+        super.onDestroy()
+        presenter.destroy()
     }
 
-    private fun showFailure(resId: Int) {
-        Toast.makeText(this, resId, Toast.LENGTH_SHORT).show()
-        Log.d(tag, "Failure ${getString(resId)}")
+    override fun showPlanet(planet: Planet) {
+        humongous_doge.x = planet.location.x.toFloat() + humongous_doge.width / 2
+        humongous_doge.y = planet.location.y.toFloat() + humongous_doge.height / 2
     }
 
-    private fun updateSatelliteLocation(location: Location) {
-        //Log.d(tag, "New location $location")
-        doge.x = location.x.toFloat() + doge.width / 2
-        doge.y = location.y.toFloat() + doge.height / 2
+    override fun showSatellite(satellite: Location) {
+        doge.x = satellite.x.toFloat() + doge.width / 2
+        doge.y = satellite.y.toFloat() + doge.height / 2
+    }
+
+    override fun showTarget(target: Target) {
+        target_star.x = target.location.x.toFloat() + target_star.width / 2
+        target_star.y = target.location.y.toFloat() + target_star.height / 2
+    }
+
+    override fun showCollision(location: Location) {
+        Toast.makeText(this, "Collision", Toast.LENGTH_SHORT).show()
+    }
+
+    override fun showFinish(location: Location) {
+        Toast.makeText(this, "Finish", Toast.LENGTH_SHORT).show()
+    }
+
+    override fun hideLoading() {
+        Toast.makeText(this, "Loading hidden", Toast.LENGTH_LONG).show()
+    }
+
+    override fun showLoading() {
+        Toast.makeText(this, "Loading shown", Toast.LENGTH_LONG).show()
     }
 }

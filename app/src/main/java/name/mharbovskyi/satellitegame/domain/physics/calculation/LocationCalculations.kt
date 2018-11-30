@@ -43,5 +43,5 @@ fun nextLocationSmooth(
     )
 }
 
-internal fun nextLocationProjection(coordinate: Double, speed: Double, timeInterval: Double) =
+private fun nextLocationProjection(coordinate: Double, speed: Double, timeInterval: Double) =
     coordinate + speed * timeInterval

@@ -27,5 +27,11 @@ fun scaledValuesFor(
     val scale = 12 * measurementSystem.planet.radius.medium / screenSize.height
     val dropRate = trajectoryFrames / framesRate * scaledPeriod
 
-    return ScaledValues(step, scale, dropRate.roundToInt(), framesRate, trajectoryFrames)
+    return ScaledValues(
+        step,
+        scale,
+        dropRate.roundToInt(),
+        framesRate,
+        trajectoryFrames
+    )
 }

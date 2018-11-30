@@ -12,6 +12,12 @@ open class ObjectState(
         "ObjectState(speed=$speed, acceleration=$acceleration, location=$location)"
 }
 
+fun ObjectState.copy(
+    speed: Speed = this.speed,
+    acceleration: Acceleration = this.acceleration,
+    location: Location = this.location
+) = ObjectState(speed, acceleration, location)
+
 interface Projection {
     val x: Double
     val y: Double

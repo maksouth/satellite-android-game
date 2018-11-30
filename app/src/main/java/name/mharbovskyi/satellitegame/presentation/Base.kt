@@ -1,6 +1,5 @@
 package name.mharbovskyi.satellitegame.presentation
 
-import android.arch.lifecycle.ViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -24,18 +23,6 @@ abstract class CoroutinePresenter
         get() = Dispatchers.IO + job
 
     override fun destroy() {
-        job.cancel()
-    }
-}
-
-open class BaseViewModel: ViewModel(), CoroutineScope {
-
-    private val job = Job()
-    override val coroutineContext: CoroutineContext
-        get() = Dispatchers.IO + job
-
-    override fun onCleared() {
-        super.onCleared()
         job.cancel()
     }
 }

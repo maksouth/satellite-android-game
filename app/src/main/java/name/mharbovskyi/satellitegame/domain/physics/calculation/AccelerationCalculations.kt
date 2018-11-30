@@ -31,7 +31,7 @@ fun nextAcceleration(
     )
 }
 
-fun calculateAccelerationProjection(
+private fun calculateAccelerationProjection(
     gravitationalCenterMass: Double,
     gravitationalCenterProjection: Double,
     satelliteProjection: Double,

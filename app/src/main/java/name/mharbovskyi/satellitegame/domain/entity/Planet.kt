@@ -1,5 +1,9 @@
 package name.mharbovskyi.satellitegame.domain.entity
 
+data class PlanetSystem(
+    val planets: List<Planet>
+)
+
 class Planet(
     val name: String,
     val mass: Double,
