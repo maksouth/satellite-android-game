@@ -25,6 +25,7 @@ class PlayPresenter(
     private var startSatelliteJob: Job? = null
 
     override fun load() {
+        //todo transform coordinate
         planetSystem.showPlanets()
         post { view?.showTarget(target) }
         post { view?.showSatellite(baseSatellite.location) }
@@ -48,15 +49,12 @@ class PlayPresenter(
         ).map( ::scaleForScreen )
 
         startSatelliteJob = launch {
-            var frameComputeTime: Long
 
             for ((planetSystem, satellite) in trajectory) {
-                frameComputeTime = measureTimeMillis {
-                    planetSystem.showPlanets()
-                    post { view?.showSatellite(satellite.location) }
-                }
+                planetSystem.showPlanets()
+                post { view?.showSatellite(satellite.location) }
 
-                delay(frameDelay - frameComputeTime)
+                delay(frameDelay)
             }
         }
     }

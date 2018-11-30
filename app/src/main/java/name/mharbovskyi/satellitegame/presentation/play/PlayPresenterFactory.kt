@@ -28,7 +28,7 @@ object PlayPresenterFactory {
         val planetSystem = PlanetSystem(listOf(planet))
 
         val target = Target(
-            Location(0.0, planet.radius),
+            Location(0.0, 10*planet.radius),
             planet.radius / 10
         )
 

@@ -46,12 +46,12 @@ class MainActivity : AppCompatActivity(), PlayContract.View {
     }
 
     override fun showPlanet(planet: Planet) {
-        humongous_doge.x = planet.location.x.toFloat() + humongous_doge.width / 2
+        humongous_doge.x = planet.location.x.toFloat() - humongous_doge.width / 2
         humongous_doge.y = planet.location.y.toFloat() + humongous_doge.height / 2
     }
 
     override fun showSatellite(satellite: Location) {
-        doge.x = satellite.x.toFloat() + doge.width / 2
+        doge.x = satellite.x.toFloat() - doge.width / 2
         doge.y = satellite.y.toFloat() + doge.height / 2
     }
 
