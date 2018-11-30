@@ -32,7 +32,7 @@ class MainActivity : AppCompatActivity(), PlayContract.View {
 
     override fun onStart() {
         super.onStart()
-        presenter.start(1.0, 1.0)
+        presenter.start(1.3, 1.0)
     }
 
     override fun onStop() {
@@ -47,16 +47,16 @@ class MainActivity : AppCompatActivity(), PlayContract.View {
 
     override fun showPlanet(planet: Planet) {
         humongous_doge.x = planet.location.x.toFloat() - humongous_doge.width / 2
-        humongous_doge.y = planet.location.y.toFloat() + humongous_doge.height / 2
+        humongous_doge.y = planet.location.y.toFloat() - humongous_doge.height / 2
     }
 
     override fun showSatellite(satellite: Location) {
         doge.x = satellite.x.toFloat() - doge.width / 2
-        doge.y = satellite.y.toFloat() + doge.height / 2
+        doge.y = satellite.y.toFloat() - doge.height / 2
     }
 
     override fun showTarget(target: Target) {
-        target_star.x = target.location.x.toFloat() + target_star.width / 2
+        target_star.x = target.location.x.toFloat() - target_star.width / 2
         target_star.y = target.location.y.toFloat() + target_star.height / 2
     }
 
