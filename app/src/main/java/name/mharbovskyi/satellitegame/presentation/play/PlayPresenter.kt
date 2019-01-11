@@ -59,6 +59,10 @@ class PlayPresenter(
         }
     }
 
+    override fun restart() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
     private fun showCollision(location: Location) = post { view?.showCollision(location) }
 
     private fun showFinish(location: Location) = post { view?.showFinish(location) }

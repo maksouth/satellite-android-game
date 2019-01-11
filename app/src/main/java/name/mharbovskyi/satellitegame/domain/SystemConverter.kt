@@ -25,7 +25,7 @@ fun scaledValuesFor(
 ): ScaledValues {
     val step = measurementSystem.period / trajectoryFrames
     val scale = 12 * measurementSystem.planet.radius.medium / screenSize.height
-    val dropRate = trajectoryFrames / framesRate * scaledPeriod
+    val dropRate = trajectoryFrames / framesRate * scaledPeriod * 1.5
 
     return ScaledValues(
         step,

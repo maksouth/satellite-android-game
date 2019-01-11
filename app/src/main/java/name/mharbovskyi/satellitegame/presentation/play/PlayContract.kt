@@ -12,6 +12,7 @@ interface PlayContract {
         fun load()
         fun start(speedXTimes: Double, speedYTimes: Double)
         fun stop()
+        fun restart()
     }
 
     interface View: BaseView {

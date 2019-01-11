@@ -9,10 +9,13 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
-        <activity android:name="name.mharbovskyi.satellitegame.presentation.play.MainActivity">
+        <activity android:name=".presentation.play.PlayActivity"/>
+        <activity android:name=".presentation.play.DrawingActivity">
+        </activity>
+        <activity android:name=".presentation.start.StartActivity"
+            android:noHistory="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
-
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>

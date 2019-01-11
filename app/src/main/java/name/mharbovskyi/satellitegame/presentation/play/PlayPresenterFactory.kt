@@ -32,11 +32,12 @@ object PlayPresenterFactory {
             planet.radius / 10
         )
 
-        val speed = primaryOrbitSpeed(planet.copy(radius = planet.radius * 1.1), measurementSystem.g)
+        val satelliteOrbitRadiusTimes = 1
+        val speed = primaryOrbitSpeed(planet.copy(radius = planet.radius * satelliteOrbitRadiusTimes), measurementSystem.g)
         val satellite = ObjectState(
             Speed(speed, 0.0),
             Acceleration(0.0, 0.0),
-            Location(0.0, 1.1 * planet.radius)
+            Location(0.0, satelliteOrbitRadiusTimes * planet.radius)
         )
 
         val stateTransformer = SinglePlanetStateTransformer(measurementSystem.g)

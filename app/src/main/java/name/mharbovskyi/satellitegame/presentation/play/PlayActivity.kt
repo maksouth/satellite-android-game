@@ -1,8 +1,9 @@
 package name.mharbovskyi.satellitegame.presentation.play
 
+import android.app.Activity
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
 import android.util.DisplayMetrics
+import android.util.Log
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_main.*
 import name.mharbovskyi.satellitegame.R
@@ -10,9 +11,9 @@ import name.mharbovskyi.satellitegame.domain.entity.Location
 import name.mharbovskyi.satellitegame.domain.entity.Planet
 import name.mharbovskyi.satellitegame.domain.entity.Target
 
-class MainActivity : AppCompatActivity(), PlayContract.View {
+class PlayActivity : Activity(), PlayContract.View {
 
-    private val tag = MainActivity::class.java.simpleName.toString()
+    private val tag = PlayActivity::class.java.simpleName.toString()
 
     lateinit var presenter: PlayContract.Presenter
 
@@ -26,13 +27,15 @@ class MainActivity : AppCompatActivity(), PlayContract.View {
         val height = displayMetrics.heightPixels
         val width = displayMetrics.widthPixels
 
+        Log.d(tag, "height $height width $width")
+
         presenter = PlayPresenterFactory.build(this, width, height)
         presenter.load()
     }
 
     override fun onStart() {
         super.onStart()
-        presenter.start(1.3, 1.0)
+        presenter.start(1.0, 1.0)
     }
 
     override fun onStop() {
@@ -48,6 +51,7 @@ class MainActivity : AppCompatActivity(), PlayContract.View {
     override fun showPlanet(planet: Planet) {
         humongous_doge.x = planet.location.x.toFloat() - humongous_doge.width / 2
         humongous_doge.y = planet.location.y.toFloat() - humongous_doge.height / 2
+        Log.d(tag, "planet y ${humongous_doge.y} x ${humongous_doge.x}")
     }
 
     override fun showSatellite(satellite: Location) {

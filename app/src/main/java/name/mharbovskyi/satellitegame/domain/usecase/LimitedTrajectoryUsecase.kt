@@ -40,11 +40,15 @@ class LimitedTrajectoryUsecase(
         collisionListener: (Location) -> Unit,
         finishListener: (Location) -> Unit
     ): Boolean =
-        if (completionTracker.isFinish(target, satellite)) {
-            finishListener(satellite.location)
-            false
-        } else if (completionTracker.isCollision(planetSystem, satellite)) {
-            collisionListener(satellite.location)
-            false
-        } else true
+        when {
+            completionTracker.isFinish(target, satellite) -> {
+                finishListener(satellite.location)
+                false
+            }
+            completionTracker.isCollision(planetSystem, satellite) -> {
+                collisionListener(satellite.location)
+                false
+            }
+            else -> true
+        }
 }
