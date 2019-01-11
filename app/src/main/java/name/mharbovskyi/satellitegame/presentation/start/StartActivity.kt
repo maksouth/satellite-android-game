@@ -19,28 +19,5 @@ class StartActivity : Activity() {
         start_button.setOnClickListener {
             startActivity(Intent(this, PlayActivity::class.java))
         }
-
-        val planet = Planet(
-            "Ventura",
-            100.0,
-            80.0,
-            Location(480.0, 794.0)
-        )
-
-        val satellite = ObjectState(
-            Speed(0.0, 0.0),
-            Acceleration(0.0, 0.0),
-            Location(320.0, 794.0)
-        )
-
-        val satellite_next = satellite.copy(
-            location = satellite.location.copy(x = 640.0)
-        )
-
-        play_surface.drawPlanet(planet)
-//        play_surface.drawSatellite(satellite)
-
-        var handler = Handler(Looper.getMainLooper())
-//        handler.postDelayed({ play_surface.drawSatellite(satellite_next) }, 2000)
     }
 }

@@ -5,11 +5,9 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Path
-import android.media.Image
 import android.util.AttributeSet
 import android.view.View
 import name.mharbovskyi.satellitegame.domain.entity.Location
-import name.mharbovskyi.satellitegame.domain.entity.ObjectState
 import name.mharbovskyi.satellitegame.domain.entity.Planet
 import name.mharbovskyi.satellitegame.domain.entity.TargetSpot
 
@@ -28,6 +26,9 @@ class PlaySurfaceView @JvmOverloads constructor(
     private val targetPaint = Paint()
     private val targetPath = Path()
 
+    private val trajectoryTail = Path()
+    private val trajectoryPaint = Paint()
+
     init {
         planetPaint.isAntiAlias = true
         planetPaint.color = Color.BLUE
@@ -43,6 +44,10 @@ class PlaySurfaceView @JvmOverloads constructor(
         targetPaint.color = Color.RED
         targetPaint.style = Paint.Style.FILL
         targetPaint.strokeJoin = Paint.Join.ROUND
+
+        trajectoryPaint.color = Color.GRAY
+        trajectoryPaint.style = Paint.Style.STROKE
+        trajectoryPaint.strokeJoin = Paint.Join.MITER
     }
 
     override fun onDraw(canvas: Canvas) {
@@ -51,6 +56,12 @@ class PlaySurfaceView @JvmOverloads constructor(
         canvas.drawPath(planetPath, planetPaint)
         canvas.drawPath(satellitePath, satellitePaint)
         canvas.drawPath(targetPath, targetPaint)
+        canvas.drawPath(trajectoryTail, trajectoryPaint)
+    }
+
+    fun clearTrajectoryTail() {
+        trajectoryTail.reset()
+        invalidate()
     }
 
     fun drawPlanet(planet: Planet) {
@@ -83,6 +94,13 @@ class PlaySurfaceView @JvmOverloads constructor(
 
     fun drawSatellite(satellite: Location) {
         satellitePath.reset()
+
+        trajectoryTail.addCircle(
+            satellite.x.toFloat(),
+            satellite.y.toFloat(),
+            5f,
+            Path.Direction.CW
+        )
 
         satellitePath.addCircle(
             satellite.x.toFloat(),

@@ -21,5 +21,6 @@ interface PlayContract {
         fun showSatellite(satellite: Location)
         fun showCollision(location: Location)
         fun showFinish(location: Location)
+        fun clearTrajectoryTail()
     }
 }

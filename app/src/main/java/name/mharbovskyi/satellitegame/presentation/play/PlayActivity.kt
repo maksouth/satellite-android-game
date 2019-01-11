@@ -12,7 +12,6 @@ import name.mharbovskyi.satellitegame.domain.entity.Planet
 import name.mharbovskyi.satellitegame.domain.entity.TargetSpot
 
 class PlayActivity : Activity(), PlayContract.View {
-
     private val tag = PlayActivity::class.java.simpleName.toString()
 
     lateinit var presenter: PlayContract.Presenter
@@ -77,5 +76,9 @@ class PlayActivity : Activity(), PlayContract.View {
 
     override fun showLoading() {
         Toast.makeText(this, "Loading shown", Toast.LENGTH_LONG).show()
+    }
+
+    override fun clearTrajectoryTail() {
+        play_surface.clearTrajectoryTail()
     }
 }

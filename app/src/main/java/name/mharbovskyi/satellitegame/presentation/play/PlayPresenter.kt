@@ -48,6 +48,8 @@ class PlayPresenter(
             )
         )
 
+
+
         trajectory = limitedTrajectoryUsecase.build(
             planetSystem,
             speededSatellite,
@@ -70,6 +72,7 @@ class PlayPresenter(
 
     override fun restart() {
         isRunning = false
+        view?.clearTrajectoryTail()
         load()
     }
 
