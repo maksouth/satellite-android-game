@@ -6,16 +6,15 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import name.mharbovskyi.satellitegame.domain.CoordinateTransformer
 import name.mharbovskyi.satellitegame.domain.entity.*
-import name.mharbovskyi.satellitegame.domain.entity.Target
+import name.mharbovskyi.satellitegame.domain.entity.TargetSpot
 import name.mharbovskyi.satellitegame.domain.usecase.LimitedTrajectoryUsecase
 import name.mharbovskyi.satellitegame.presentation.CoroutinePresenter
-import kotlin.system.measureTimeMillis
 
 class PlayPresenter(
     private var view: PlayContract.View?,
-    private val baseSatellite: ObjectState,
+    private var baseSatellite: ObjectState,
     private val planetSystem: PlanetSystem,
-    private val target: Target,
+    private val target: TargetSpot,
     private val limitedTrajectoryUsecase: LimitedTrajectoryUsecase,
     private val coordinateTransformer: CoordinateTransformer,
     private val frameDelay: Long
@@ -24,14 +23,23 @@ class PlayPresenter(
 
     private var startSatelliteJob: Job? = null
 
+    private var trajectory: Sequence<Pair<PlanetSystem, ObjectState>>? = null
+
+    private var isRunning = true
+
     override fun load() {
-        //todo transform coordinate
-        planetSystem.showPlanets()
-        post { view?.showTarget(target) }
-        post { view?.showSatellite(baseSatellite.location) }
+        val scaledTarget = coordinateTransformer.transformTarget(target)
+        val (scaledPlanets, scaledSatellite) =
+                scaleForScreen(planetSystem to baseSatellite)
+
+        scaledPlanets.showPlanets()
+        post { view?.showTarget(scaledTarget) }
+        post { view?.showSatellite(scaledSatellite.location) }
     }
 
     override fun start(speedXTimes: Double, speedYTimes: Double) {
+
+        isRunning = true
 
         val speededSatellite = baseSatellite.copy(
             speed = Speed(
@@ -40,27 +48,29 @@ class PlayPresenter(
             )
         )
 
-        val trajectory = limitedTrajectoryUsecase.build(
+        trajectory = limitedTrajectoryUsecase.build(
             planetSystem,
             speededSatellite,
-            target,
+            target.copy(radius = 1.5 * target.radius),
             finishListener = ::showFinish,
             collisionListener = ::showCollision
         ).map( ::scaleForScreen )
 
         startSatelliteJob = launch {
 
-            for ((planetSystem, satellite) in trajectory) {
-                planetSystem.showPlanets()
-                post { view?.showSatellite(satellite.location) }
+            trajectory?.takeWhile { isRunning }
+                ?.forEach {(planetSystem, satellite) ->
+                    planetSystem.showPlanets()
+                    post { view?.showSatellite(satellite.location) }
 
-                delay(frameDelay)
-            }
+                    delay(frameDelay)
+                }
         }
     }
 
     override fun restart() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        isRunning = false
+        load()
     }
 
     private fun showCollision(location: Location) = post { view?.showCollision(location) }

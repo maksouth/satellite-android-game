@@ -9,7 +9,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 import name.mharbovskyi.satellitegame.R
 import name.mharbovskyi.satellitegame.domain.entity.Location
 import name.mharbovskyi.satellitegame.domain.entity.Planet
-import name.mharbovskyi.satellitegame.domain.entity.Target
+import name.mharbovskyi.satellitegame.domain.entity.TargetSpot
 
 class PlayActivity : Activity(), PlayContract.View {
 
@@ -31,11 +31,14 @@ class PlayActivity : Activity(), PlayContract.View {
 
         presenter = PlayPresenterFactory.build(this, width, height)
         presenter.load()
-    }
 
-    override fun onStart() {
-        super.onStart()
-        presenter.start(1.0, 1.0)
+        start_button.setOnClickListener {
+            presenter.start(0.8, 1.0)
+        }
+
+        restart_button.setOnClickListener {
+            presenter.restart()
+        }
     }
 
     override fun onStop() {
@@ -49,19 +52,15 @@ class PlayActivity : Activity(), PlayContract.View {
     }
 
     override fun showPlanet(planet: Planet) {
-        humongous_doge.x = planet.location.x.toFloat() - humongous_doge.width / 2
-        humongous_doge.y = planet.location.y.toFloat() - humongous_doge.height / 2
-        Log.d(tag, "planet y ${humongous_doge.y} x ${humongous_doge.x}")
+        play_surface.drawPlanet(planet)
     }
 
     override fun showSatellite(satellite: Location) {
-        doge.x = satellite.x.toFloat() - doge.width / 2
-        doge.y = satellite.y.toFloat() - doge.height / 2
+        play_surface.drawSatellite(satellite)
     }
 
-    override fun showTarget(target: Target) {
-        target_star.x = target.location.x.toFloat() - target_star.width / 2
-        target_star.y = target.location.y.toFloat() + target_star.height / 2
+    override fun showTarget(target: TargetSpot) {
+        play_surface.drawTarget(target)
     }
 
     override fun showCollision(location: Location) {

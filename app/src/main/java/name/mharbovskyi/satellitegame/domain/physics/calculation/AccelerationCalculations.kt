@@ -37,7 +37,7 @@ private fun calculateAccelerationProjection(
     satelliteProjection: Double,
     distance: Double,
     gravitationalConstant: Double,
-    distancePower: Double = 3.0
+    distancePower: Double = 2.9
 ): Double {
     val projectionDistance = gravitationalCenterProjection - satelliteProjection
     return  gravitationalConstant * gravitationalCenterMass * projectionDistance / distance.pow(distancePower)

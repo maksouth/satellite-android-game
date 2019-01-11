@@ -4,7 +4,7 @@ import name.mharbovskyi.satellitegame.domain.CompletionTracker
 import name.mharbovskyi.satellitegame.domain.entity.Location
 import name.mharbovskyi.satellitegame.domain.entity.ObjectState
 import name.mharbovskyi.satellitegame.domain.entity.PlanetSystem
-import name.mharbovskyi.satellitegame.domain.entity.Target
+import name.mharbovskyi.satellitegame.domain.entity.TargetSpot
 import name.mharbovskyi.satellitegame.domain.TrajectoryBuilder
 
 class LimitedTrajectoryUsecase(
@@ -16,7 +16,7 @@ class LimitedTrajectoryUsecase(
     fun build(
         planetSystem: PlanetSystem,
         satellite: ObjectState,
-        target: Target,
+        target: TargetSpot,
         collisionListener: (Location) -> Unit,
         finishListener: (Location) -> Unit
     ): Sequence<Pair<PlanetSystem, ObjectState>> =
@@ -35,7 +35,7 @@ class LimitedTrajectoryUsecase(
 
     private fun checkAndNotifyCompletion(
         planetSystem: PlanetSystem,
-        target: Target,
+        target: TargetSpot,
         satellite: ObjectState,
         collisionListener: (Location) -> Unit,
         finishListener: (Location) -> Unit

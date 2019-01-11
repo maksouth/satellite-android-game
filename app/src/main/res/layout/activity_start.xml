@@ -6,6 +6,10 @@
         android:layout_height="match_parent"
         tools:context=".presentation.start.StartActivity">
 
+    <name.mharbovskyi.satellitegame.presentation.play.PlaySurfaceView
+            android:id="@+id/play_surface"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
 
     <Button
             android:text="Start"

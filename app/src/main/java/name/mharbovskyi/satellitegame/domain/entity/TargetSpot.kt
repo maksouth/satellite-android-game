@@ -1,6 +1,6 @@
 package name.mharbovskyi.satellitegame.domain.entity
 
-data class Target (
+data class TargetSpot (
     val location: Location,
     val radius: Double
 )

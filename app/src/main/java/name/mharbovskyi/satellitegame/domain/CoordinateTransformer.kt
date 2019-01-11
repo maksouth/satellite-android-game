@@ -2,11 +2,13 @@ package name.mharbovskyi.satellitegame.domain
 
 import name.mharbovskyi.satellitegame.domain.entity.Location
 import name.mharbovskyi.satellitegame.domain.entity.Planet
+import name.mharbovskyi.satellitegame.domain.entity.TargetSpot
 import name.mharbovskyi.satellitegame.domain.entity.copy
 
 interface CoordinateTransformer {
     fun transformPlanet(planet: Planet): Planet
     fun transformLocation(location: Location): Location
+    fun transformTarget(target: TargetSpot): TargetSpot
 }
 
 class ScreenCoordinateTransformer(
@@ -30,6 +32,12 @@ class ScreenCoordinateTransformer(
 
         return Location(movedX, movedY)
     }
+
+    override fun transformTarget(target: TargetSpot): TargetSpot =
+            target.copy(
+                radius = scaled(target.radius, scale = scale),
+                location = transformLocation(target.location)
+            )
 }
 
 internal fun scaled(value: Double, scale: Double) =
