@@ -1,4 +1,4 @@
-package name.mharbovskyi.satellitegame.presentation.play
+package name.mharbovskyi.satellitegame.presentation.play.view
 
 import android.app.Activity
 import android.os.Bundle
@@ -10,8 +10,11 @@ import name.mharbovskyi.satellitegame.R
 import name.mharbovskyi.satellitegame.domain.entity.Location
 import name.mharbovskyi.satellitegame.domain.entity.Planet
 import name.mharbovskyi.satellitegame.domain.entity.TargetSpot
+import name.mharbovskyi.satellitegame.presentation.play.PlayContract
+import name.mharbovskyi.satellitegame.presentation.play.PlayPresenterFactory
 
 class PlayActivity : Activity(), PlayContract.View {
+
     private val tag = PlayActivity::class.java.simpleName.toString()
 
     lateinit var presenter: PlayContract.Presenter
@@ -32,12 +35,14 @@ class PlayActivity : Activity(), PlayContract.View {
         presenter.load()
 
         start_button.setOnClickListener {
-            presenter.start(0.8, 1.0)
+            presenter.start()
         }
 
         restart_button.setOnClickListener {
             presenter.restart()
         }
+
+        play_surface.setTouchEventListener { presenter.onTouchEvent(it) }
     }
 
     override fun onStop() {
@@ -80,5 +85,13 @@ class PlayActivity : Activity(), PlayContract.View {
 
     override fun clearTrajectoryTail() {
         play_surface.clearTrajectoryTail()
+    }
+
+    override fun showTrajectoryHint(trajectory: List<Location>) {
+        play_surface.drawTrajectoryHint(trajectory)
+    }
+
+    override fun clearTrajectoryHint() {
+        play_surface.clearTrajectoryHint()
     }
 }

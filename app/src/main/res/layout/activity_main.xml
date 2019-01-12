@@ -4,9 +4,9 @@
         xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".presentation.play.PlayActivity">
+        tools:context=".presentation.play.view.PlayActivity">
 
-    <name.mharbovskyi.satellitegame.presentation.play.PlaySurfaceView
+    <name.mharbovskyi.satellitegame.presentation.play.view.PlaySurfaceView
             android:id="@+id/play_surface"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>

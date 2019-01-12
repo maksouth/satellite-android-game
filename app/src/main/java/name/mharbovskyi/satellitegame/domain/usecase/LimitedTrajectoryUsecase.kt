@@ -17,8 +17,8 @@ class LimitedTrajectoryUsecase(
         planetSystem: PlanetSystem,
         satellite: ObjectState,
         target: TargetSpot,
-        collisionListener: (Location) -> Unit,
-        finishListener: (Location) -> Unit
+        collisionListener: (Location) -> Unit = {},
+        finishListener: (Location) -> Unit = {}
     ): Sequence<Pair<PlanetSystem, ObjectState>> =
         trajectoryBuilder
             .build(planetSystem, satellite, timeStep)

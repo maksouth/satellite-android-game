@@ -9,8 +9,8 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
-        <activity android:name=".presentation.play.PlayActivity"/>
-        <activity android:name=".presentation.play.DrawingActivity">
+        <activity android:name=".presentation.play.view.PlayActivity"/>
+        <activity android:name=".presentation.play.view.DrawingActivity">
         </activity>
         <activity android:name=".presentation.start.StartActivity"
             android:noHistory="true">

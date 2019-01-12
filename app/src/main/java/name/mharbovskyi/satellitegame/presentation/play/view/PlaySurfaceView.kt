@@ -1,4 +1,4 @@
-package name.mharbovskyi.satellitegame.presentation.play
+package name.mharbovskyi.satellitegame.presentation.play.view
 
 import android.content.Context
 import android.graphics.Canvas
@@ -6,6 +6,7 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Path
 import android.util.AttributeSet
+import android.view.MotionEvent
 import android.view.View
 import name.mharbovskyi.satellitegame.domain.entity.Location
 import name.mharbovskyi.satellitegame.domain.entity.Planet
@@ -29,6 +30,11 @@ class PlaySurfaceView @JvmOverloads constructor(
     private val trajectoryTail = Path()
     private val trajectoryPaint = Paint()
 
+    private val trajectoryHint = Path()
+    private val trajectoryHintPaint = Paint()
+
+    private var listener: ((MotionEvent) -> Unit)? = null
+
     init {
         planetPaint.isAntiAlias = true
         planetPaint.color = Color.BLUE
@@ -48,6 +54,10 @@ class PlaySurfaceView @JvmOverloads constructor(
         trajectoryPaint.color = Color.GRAY
         trajectoryPaint.style = Paint.Style.STROKE
         trajectoryPaint.strokeJoin = Paint.Join.MITER
+
+        trajectoryHintPaint.color = Color.BLACK
+        trajectoryHintPaint.style = Paint.Style.FILL
+        trajectoryHintPaint.strokeJoin = Paint.Join.MITER
     }
 
     override fun onDraw(canvas: Canvas) {
@@ -57,6 +67,21 @@ class PlaySurfaceView @JvmOverloads constructor(
         canvas.drawPath(satellitePath, satellitePaint)
         canvas.drawPath(targetPath, targetPaint)
         canvas.drawPath(trajectoryTail, trajectoryPaint)
+        canvas.drawPath(trajectoryHint, trajectoryHintPaint)
+    }
+
+    override fun onTouchEvent(event: MotionEvent): Boolean {
+        listener?.invoke(event)
+        return true
+    }
+
+    override fun onDetachedFromWindow() {
+        super.onDetachedFromWindow()
+        listener = null
+    }
+
+    fun setTouchEventListener(listener: (MotionEvent) -> Unit) {
+        this.listener = listener
     }
 
     fun clearTrajectoryTail() {
@@ -131,6 +156,25 @@ class PlaySurfaceView @JvmOverloads constructor(
             Path.Direction.CW
         )
 
+        invalidate()
+    }
+
+    fun drawTrajectoryHint(trajectory: List<Location>) {
+        trajectoryHint.reset()
+
+        trajectory.forEach {
+            trajectoryHint.addCircle(
+                it.x.toFloat(),
+                it.y.toFloat(),
+                8f,
+                Path.Direction.CW)
+        }
+
+        invalidate()
+    }
+
+    fun clearTrajectoryHint() {
+        trajectoryHint.reset()
         invalidate()
     }
 

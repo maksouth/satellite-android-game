@@ -1,5 +1,6 @@
 package name.mharbovskyi.satellitegame.presentation.play
 
+import android.view.MotionEvent
 import name.mharbovskyi.satellitegame.domain.entity.Location
 import name.mharbovskyi.satellitegame.domain.entity.Planet
 import name.mharbovskyi.satellitegame.domain.entity.TargetSpot
@@ -10,9 +11,10 @@ interface PlayContract {
 
     interface Presenter: BasePresenter {
         fun load()
-        fun start(speedXTimes: Double, speedYTimes: Double)
+        fun start()
         fun stop()
         fun restart()
+        fun onTouchEvent(event: MotionEvent)
     }
 
     interface View: BaseView {
@@ -22,5 +24,7 @@ interface PlayContract {
         fun showCollision(location: Location)
         fun showFinish(location: Location)
         fun clearTrajectoryTail()
+        fun showTrajectoryHint(trajectory: List<Location>)
+        fun clearTrajectoryHint()
     }
 }
