@@ -11,6 +11,7 @@ import android.view.View
 import name.mharbovskyi.satellitegame.domain.entity.Location
 import name.mharbovskyi.satellitegame.domain.entity.Planet
 import name.mharbovskyi.satellitegame.domain.entity.TargetSpot
+import kotlin.concurrent.thread
 
 class PlaySurfaceView @JvmOverloads constructor(
     context: Context,
@@ -34,6 +35,8 @@ class PlaySurfaceView @JvmOverloads constructor(
     private val trajectoryHintPaint = Paint()
 
     private var listener: ((MotionEvent) -> Unit)? = null
+
+    private var frameInvalidationThread: Thread? = null
 
     init {
         planetPaint.isAntiAlias = true
@@ -80,13 +83,27 @@ class PlaySurfaceView @JvmOverloads constructor(
         listener = null
     }
 
+    fun start() {
+        frameInvalidationThread = Thread {
+            while (!Thread.currentThread().isInterrupted) {
+                Thread.sleep(1000/60)
+                invalidate()
+            }
+        }
+        frameInvalidationThread?.start()
+    }
+
+    fun stop() {
+        frameInvalidationThread?.interrupt()
+    }
+
     fun setTouchEventListener(listener: (MotionEvent) -> Unit) {
         this.listener = listener
     }
 
     fun clearTrajectoryTail() {
         trajectoryTail.reset()
-        invalidate()
+        //invalidate()
     }
 
     fun drawPlanet(planet: Planet) {
@@ -99,7 +116,7 @@ class PlaySurfaceView @JvmOverloads constructor(
             Path.Direction.CW
         )
 
-        invalidate()
+        //invalidate()
     }
 
     fun drawPlanets(planets: List<Planet>) {
@@ -114,7 +131,7 @@ class PlaySurfaceView @JvmOverloads constructor(
             )
         }
 
-        invalidate()
+        //invalidate()
     }
 
     fun drawSatellite(satellite: Location) {
@@ -134,7 +151,7 @@ class PlaySurfaceView @JvmOverloads constructor(
             Path.Direction.CW
         )
 
-        invalidate()
+        //invalidate()
     }
 
     fun drawTarget(target: TargetSpot) {
@@ -156,7 +173,7 @@ class PlaySurfaceView @JvmOverloads constructor(
             Path.Direction.CW
         )
 
-        invalidate()
+        //invalidate()
     }
 
     fun drawTrajectoryHint(trajectory: List<Location>) {
@@ -170,12 +187,12 @@ class PlaySurfaceView @JvmOverloads constructor(
                 Path.Direction.CW)
         }
 
-        invalidate()
+        //invalidate()
     }
 
     fun clearTrajectoryHint() {
         trajectoryHint.reset()
-        invalidate()
+        //invalidate()
     }
 
 }

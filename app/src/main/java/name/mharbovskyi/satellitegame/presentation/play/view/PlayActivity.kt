@@ -45,9 +45,15 @@ class PlayActivity : Activity(), PlayContract.View {
         play_surface.setTouchEventListener { presenter.onTouchEvent(it) }
     }
 
+    override fun onStart() {
+        super.onStart()
+        play_surface.start()
+    }
+
     override fun onStop() {
         super.onStop()
         presenter.stop()
+        play_surface.stop()
     }
 
     override fun onDestroy() {

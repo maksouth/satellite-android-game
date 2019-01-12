@@ -127,10 +127,6 @@ class PlayPresenter(
                 (screenSatellite.y - yEndTouch) / primarySpeedProjection
     }
 
-    private fun showCollision(location: Location) = post { view?.showCollision(location) }
-
-    private fun showFinish(location: Location) = post { view?.showFinish(location) }
-
     private fun showTrajectoryHint(satellite: ObjectState) {
         val trajectory = limitedTrajectoryUsecase.build(
             planetSystem,
@@ -144,6 +140,10 @@ class PlayPresenter(
 
         view?.showTrajectoryHint(trajectory)
     }
+
+    private fun showCollision(location: Location) = post { view?.showCollision(location) }
+
+    private fun showFinish(location: Location) = post { view?.showFinish(location) }
 
     override fun stop() {
         startSatelliteJob?.cancel()
