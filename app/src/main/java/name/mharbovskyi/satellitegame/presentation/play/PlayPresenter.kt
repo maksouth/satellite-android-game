@@ -63,7 +63,7 @@ class PlayPresenter(
 
             trajectory?.takeWhile { isRunning }
                 ?.forEach {(planetSystem, satellite) ->
-                    planetSystem.showPlanets()
+                    //planetSystem.showPlanets()
                     post { view?.showSatellite(satellite.location) }
 
                     delay(frameDelay)

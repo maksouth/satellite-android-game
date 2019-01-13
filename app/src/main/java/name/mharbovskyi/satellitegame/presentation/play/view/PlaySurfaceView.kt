@@ -1,17 +1,18 @@
 package name.mharbovskyi.satellitegame.presentation.play.view
 
 import android.content.Context
-import android.graphics.Canvas
-import android.graphics.Color
-import android.graphics.Paint
-import android.graphics.Path
+import android.graphics.*
+import android.graphics.drawable.Drawable
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
+import name.mharbovskyi.satellitegame.R
 import name.mharbovskyi.satellitegame.domain.entity.Location
 import name.mharbovskyi.satellitegame.domain.entity.Planet
 import name.mharbovskyi.satellitegame.domain.entity.TargetSpot
-import kotlin.concurrent.thread
+import android.graphics.BitmapFactory
+
+
 
 class PlaySurfaceView @JvmOverloads constructor(
     context: Context,
@@ -19,8 +20,7 @@ class PlaySurfaceView @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : View(context, attrs, defStyleAttr){
 
-    private val planetPaint: Paint = Paint()
-    private val planetPath: Path = Path()
+    private val planetDrawable: Drawable
 
     private val satellitePaint: Paint = Paint()
     private val satellitePath: Path = Path()
@@ -39,10 +39,7 @@ class PlaySurfaceView @JvmOverloads constructor(
     private var frameInvalidationThread: Thread? = null
 
     init {
-        planetPaint.isAntiAlias = true
-        planetPaint.color = Color.BLUE
-        planetPaint.style = Paint.Style.FILL
-        planetPaint.strokeJoin = Paint.Join.MITER
+        planetDrawable = context.resources.getDrawable(R.drawable.jupiter)
 
         satellitePaint.isAntiAlias = true
         satellitePaint.color = Color.GREEN
@@ -66,7 +63,8 @@ class PlaySurfaceView @JvmOverloads constructor(
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
 
-        canvas.drawPath(planetPath, planetPaint)
+//        canvas.drawPath(planetPath, planetPaint)
+        planetDrawable.draw(canvas)
         canvas.drawPath(satellitePath, satellitePaint)
         canvas.drawPath(targetPath, targetPaint)
         canvas.drawPath(trajectoryTail, trajectoryPaint)
@@ -103,35 +101,16 @@ class PlaySurfaceView @JvmOverloads constructor(
 
     fun clearTrajectoryTail() {
         trajectoryTail.reset()
-        //invalidate()
     }
 
     fun drawPlanet(planet: Planet) {
-        planetPath.reset()
 
-        planetPath.addCircle(
-            planet.location.x.toFloat(),
-            planet.location.y.toFloat(),
-            planet.radius.toFloat(),
-            Path.Direction.CW
+        planetDrawable.setBounds(
+            (planet.location.x - planet.radius).toInt(),
+            (planet.location.y - planet.radius).toInt(),
+            (planet.location.x + planet.radius).toInt(),
+            (planet.location.y + planet.radius).toInt()
         )
-
-        //invalidate()
-    }
-
-    fun drawPlanets(planets: List<Planet>) {
-        planetPath.reset()
-
-        planets.forEach{
-            planetPath.addCircle(
-                it.location.x.toFloat(),
-                it.location.y.toFloat(),
-                it.radius.toFloat(),
-                Path.Direction.CW
-            )
-        }
-
-        //invalidate()
     }
 
     fun drawSatellite(satellite: Location) {
@@ -150,8 +129,6 @@ class PlaySurfaceView @JvmOverloads constructor(
             20.toFloat(),
             Path.Direction.CW
         )
-
-        //invalidate()
     }
 
     fun drawTarget(target: TargetSpot) {
@@ -172,8 +149,6 @@ class PlaySurfaceView @JvmOverloads constructor(
             radius.toFloat(),
             Path.Direction.CW
         )
-
-        //invalidate()
     }
 
     fun drawTrajectoryHint(trajectory: List<Location>) {
@@ -186,13 +161,10 @@ class PlaySurfaceView @JvmOverloads constructor(
                 8f,
                 Path.Direction.CW)
         }
-
-        //invalidate()
     }
 
     fun clearTrajectoryHint() {
         trajectoryHint.reset()
-        //invalidate()
     }
 
 }
