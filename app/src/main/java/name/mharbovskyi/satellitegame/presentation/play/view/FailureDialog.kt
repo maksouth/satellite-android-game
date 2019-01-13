@@ -4,20 +4,25 @@ import android.app.Activity
 import android.app.Dialog
 import android.os.Bundle
 import android.view.Window
-import android.widget.Toast
-import kotlinx.android.synthetic.main.finish_dialog.*
+import kotlinx.android.synthetic.main.failure_dialog.*
 import name.mharbovskyi.satellitegame.R
 
-class FinishSuccessDialog(activity: Activity)
+class FailureDialog(activity: Activity)
     : Dialog(activity)
 {
+    private var listener: (() -> Unit)? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         requestWindowFeature(Window.FEATURE_NO_TITLE)
-        setContentView(R.layout.finish_dialog)
+        setContentView(R.layout.failure_dialog)
 
-        finish_button.setOnClickListener{
-            Toast.makeText(context, "Not ready yet", Toast.LENGTH_SHORT).show()
+        retry_button.setOnClickListener{
+            listener?.invoke()
         }
+    }
+
+    fun setListener(listener: () -> Unit) {
+        this.listener = listener
     }
 }

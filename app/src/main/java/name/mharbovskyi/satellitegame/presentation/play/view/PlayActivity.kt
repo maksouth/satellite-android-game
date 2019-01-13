@@ -74,7 +74,12 @@ class PlayActivity : Activity(), PlayContract.View {
     }
 
     override fun showCollision(location: Location) {
-        Toast.makeText(this, "Collision", Toast.LENGTH_SHORT).show()
+        val dialog = FailureDialog(this)
+        dialog.setListener{
+            dialog.cancel()
+            presenter.restart()
+        }
+        dialog.show()
     }
 
     override fun showFinish(location: Location) {
