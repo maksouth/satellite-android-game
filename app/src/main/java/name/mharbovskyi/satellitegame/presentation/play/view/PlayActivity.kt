@@ -78,7 +78,8 @@ class PlayActivity : Activity(), PlayContract.View {
     }
 
     override fun showFinish(location: Location) {
-        Toast.makeText(this, "Finish", Toast.LENGTH_SHORT).show()
+        val dialog = FinishSuccessDialog(this)
+        dialog.show()
     }
 
     override fun hideLoading() {
