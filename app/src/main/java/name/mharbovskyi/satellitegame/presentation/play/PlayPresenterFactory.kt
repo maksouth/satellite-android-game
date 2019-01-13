@@ -29,7 +29,7 @@ object PlayPresenterFactory {
 
         val target = TargetSpot(
             Location(0.0, 3*planet.radius),
-            planet.radius / 5
+            planet.radius / 4
         )
 
         val satelliteOrbitRadiusTimes = 3

@@ -9,7 +9,7 @@
     <name.mharbovskyi.satellitegame.presentation.play.view.PlaySurfaceView
             android:id="@+id/play_surface"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent" android:background="@drawable/star_sky"/>
     <Button
             android:text="Start"
             android:layout_width="wrap_content"

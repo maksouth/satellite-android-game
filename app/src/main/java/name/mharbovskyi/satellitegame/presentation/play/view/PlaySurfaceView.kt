@@ -21,12 +21,10 @@ class PlaySurfaceView @JvmOverloads constructor(
 ) : View(context, attrs, defStyleAttr){
 
     private val planetDrawable: Drawable
+    private val targetDrawable: Drawable
 
     private val satellitePaint: Paint = Paint()
     private val satellitePath: Path = Path()
-
-    private val targetPaint = Paint()
-    private val targetPath = Path()
 
     private val trajectoryTail = Path()
     private val trajectoryPaint = Paint()
@@ -40,22 +38,19 @@ class PlaySurfaceView @JvmOverloads constructor(
 
     init {
         planetDrawable = context.resources.getDrawable(R.drawable.jupiter)
+        targetDrawable = context.resources.getDrawable(R.drawable.target)
 
         satellitePaint.isAntiAlias = true
         satellitePaint.color = Color.GREEN
         satellitePaint.style = Paint.Style.FILL
         satellitePaint.strokeJoin = Paint.Join.MITER
 
-        targetPaint.isAntiAlias = true
-        targetPaint.color = Color.RED
-        targetPaint.style = Paint.Style.FILL
-        targetPaint.strokeJoin = Paint.Join.ROUND
-
-        trajectoryPaint.color = Color.GRAY
+        trajectoryPaint.color = Color.WHITE
         trajectoryPaint.style = Paint.Style.STROKE
         trajectoryPaint.strokeJoin = Paint.Join.MITER
+        trajectoryPaint.strokeWidth = 4f
 
-        trajectoryHintPaint.color = Color.BLACK
+        trajectoryHintPaint.color = Color.WHITE
         trajectoryHintPaint.style = Paint.Style.FILL
         trajectoryHintPaint.strokeJoin = Paint.Join.MITER
     }
@@ -63,10 +58,9 @@ class PlaySurfaceView @JvmOverloads constructor(
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
 
-//        canvas.drawPath(planetPath, planetPaint)
         planetDrawable.draw(canvas)
+        targetDrawable.draw(canvas)
         canvas.drawPath(satellitePath, satellitePaint)
-        canvas.drawPath(targetPath, targetPaint)
         canvas.drawPath(trajectoryTail, trajectoryPaint)
         canvas.drawPath(trajectoryHint, trajectoryHintPaint)
     }
@@ -113,15 +107,18 @@ class PlaySurfaceView @JvmOverloads constructor(
         )
     }
 
+    var trajectoryStepCounter = 0
     fun drawSatellite(satellite: Location) {
         satellitePath.reset()
 
-        trajectoryTail.addCircle(
-            satellite.x.toFloat(),
-            satellite.y.toFloat(),
-            5f,
-            Path.Direction.CW
-        )
+        if(++trajectoryStepCounter % 15 == 0) {
+            trajectoryTail.addCircle(
+                satellite.x.toFloat(),
+                satellite.y.toFloat(),
+                5f,
+                Path.Direction.CW
+            )
+        }
 
         satellitePath.addCircle(
             satellite.x.toFloat(),
@@ -132,11 +129,12 @@ class PlaySurfaceView @JvmOverloads constructor(
     }
 
     fun drawTarget(target: TargetSpot) {
-        redrawCircle(
-            target.location.x,
-            target.location.y,
-            target.radius,
-            targetPath
+
+        targetDrawable.setBounds(
+            (target.location.x - target.radius).toInt(),
+            (target.location.y - target.radius).toInt(),
+            (target.location.x + target.radius).toInt(),
+            (target.location.y + target.radius).toInt()
         )
     }
 
